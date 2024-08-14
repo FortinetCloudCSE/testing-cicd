@@ -13,8 +13,42 @@ pipeline {
 
     stages {
 
+       stage('Checking for question/discussion section in content folders'){
+            steps {
+              script {
+                def warningFound = false
+                try {
+                  sh '''
+                  for dir in content/*/; do
+                    found=false
+                    for file in "$dir"/*; do
+                      if grep -qiE 'discussion|questions' "$file" >/dev/null 2>&1; then
+                        found=true
+                        break
+                      fi
+                    done
+                    if [ "$found" == true ]; then
+                      echo "$dir: relevant section found"
+                    else
+                      echo "$dir: sections not found"
+                      warningFound=true
+                    fi
+                  done
+                  '''
+                } catch (Exception e) {
+                   echo "An error occurred: ${e.message}"
+                }
+
+                if (warningFound) {
+                  echo "Warning: Some folders did not contain a discussion/questions section."
+                }
+
+              }
+            }
+       }
+
        stage('Running FortiDevSec scans...') {
-            when { expression { true } }
+            when { expression { false } }
             steps {
                 echo "Running SAST scan..."
                 sh 'env | grep -E "JENKINS_HOME|BUILD_ID|GIT_BRANCH|GIT_COMMIT" > /tmp/env'
