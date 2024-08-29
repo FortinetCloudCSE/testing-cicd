@@ -22,25 +22,29 @@ pipeline {
                   for dir in content/*/; do
                     found=false
                     for file in "$dir"/*; do
-                      if grep -qiE 'discussion|questions' "$file" >/dev/null 2>&1; then
+                      if grep -qiE 'discussion|questions|q&a' "$file" >/dev/null 2>&1; then
                         found=true
                         break
                       fi
                     done
-                    if [ "$found" == true ]; then
+                    if [ "$found" == "true" ]; then
                       echo "$dir: relevant section found"
                     else
                       echo "$dir: sections not found"
                       warningFound=true
                     fi
-                    if (warningFound) {
-                      echo "Warning: Some folders in "content/$dir" did not contain a discussion/questions section."
-                    }
                   done
+                  if [ "$warningFound" == "true" ]; then
+                    echo "Some folders did not contain a discussion/questions/q&a section."
+                  fi
                   '''
                 } catch (Exception e) {
                    echo "An error occurred: ${e.message}"
                 }
+
+                //if (warningFound) {
+                //  echo "Warning: Some folders did not contain a discussion/questions section."
+                //}
               }
             }
        }
