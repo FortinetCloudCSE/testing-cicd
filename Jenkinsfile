@@ -35,7 +35,7 @@ pipeline {
                     fi
                   done
                   if [ "$warningFound" == "true" ]; then
-                    echo "Some content directories did not contain any files with a discussion/questions/q&a section."
+                    echo "Warning: some content directories did not contain any files with a discussion/questions/q&a section."
                   fi
                   '''
                 } catch (Exception e) {
