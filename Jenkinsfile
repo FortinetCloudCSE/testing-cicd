@@ -33,10 +33,10 @@ pipeline {
                       echo "$dir: sections not found"
                       warningFound=true
                     fi
+                    if [ "$warningFound" == "true" ]; then
+                      echo "Some folders in content/$dir did not contain a discussion/questions/q&a section."
+                    fi
                   done
-                  if [ "$warningFound" == "true" ]; then
-                    echo "Some folders did not contain a discussion/questions/q&a section."
-                  fi
                   '''
                 } catch (Exception e) {
                    echo "An error occurred: ${e.message}"
