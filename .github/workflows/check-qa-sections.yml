@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   check-section:
@@ -32,4 +35,12 @@ jobs:
         done
         if [ "$warningFound" == "true" ]; then 
           echo "::warning::Some content directories did not contain any files with a discussion\questions\q&a section."
+          echo "warning_found=true" >> $GITHUB_ENV
+        else
+          echo "warning_found=false" >> $GITHUB_ENV
         fi
+    - name: Fail PR if section not found
+      if: env.warning_found == 'true'
+      run: |
+        echo "Required sections not found."
+        exit 1
