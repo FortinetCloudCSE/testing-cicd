@@ -14,6 +14,7 @@ jobs:
     - name: check discussion sections
       continue-on-error: true
       run: |
+        warningFound=false
         for dir in content/*/; do
           found=false
           for file in "$dir"/*; do
@@ -28,7 +29,7 @@ jobs:
             echo "$dir: sections not found"
             warningFound=true
           fi
-       done
-       if [ "$warningFound" == "true" ]; then
-          echo "::warning file=workflow::Warning: Some content directories did not contain any files with a discussion/questions/q&a section."
-       fi
+        done
+        if [ "$warningFound" == "true" ]; then 
+          echo "::warning::Some content directories did not contain any files with a discussion\questions\q&a section."
+        fi
